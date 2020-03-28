@@ -6,7 +6,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-//go:generate gencodec -type newRsp   -out new_rsp_json.go
 type newKeyResult struct {
 	Address string `json:"address"`
 }
