@@ -36,7 +36,7 @@ func GetBatchById(startId, limit uint) ([]*KeysMgr, uint, error) {
 	}
 	// 开始的index已经大于了总数
 	if startId > total {
-		return nil, total, errors.New("start 超过了总数量")
+		return nil, total, errors.New("startId 超过了数据库中的地址总数量")
 	}
 
 	err = DB.Limit(limit).Offset(startId).Find(&keysMgrs).Error

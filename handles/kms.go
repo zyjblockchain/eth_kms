@@ -14,7 +14,7 @@ type newKeyResult struct {
 func NewEthKey() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var service services.NewKeysInfo
-		if err := c.ShouldBind(&service); err != nil {
+		if err := c.ShouldBind(&service); err == nil {
 			address, err := service.NewKeys()
 			if err != nil {
 				serializer.ErrorResponse(c, 40001, "创建以太坊密钥对失败", err.Error())
@@ -36,7 +36,7 @@ type batchAddrResult struct {
 func BatchGetAddress() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var service services.BatchGetAddrInfo
-		if err := c.ShouldBind(&service); err != nil {
+		if err := c.ShouldBind(&service); err == nil {
 			addresses, total, err := service.BatchGetAddr()
 			if err != nil {
 				serializer.ErrorResponse(c, 40002, "批量拉取地址失败", err.Error())
@@ -57,7 +57,7 @@ type signResult struct {
 func SignDataHandle() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var service services.SignInfo
-		if err := c.ShouldBind(&service); err != nil {
+		if err := c.ShouldBind(&service); err == nil {
 			sig, err := service.KeySign()
 			if err != nil {
 				serializer.ErrorResponse(c, 40003, "签名失败", err.Error())
