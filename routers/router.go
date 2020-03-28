@@ -15,7 +15,7 @@ func NewRouter(addr string) {
 	r.Use(middleware.SetLoginUser())
 
 	// 注册路由
-	v1 := r.Group("/api/v1")
+	v1 := r.Group("/api/kms")
 	{
 		// 心跳检测接口
 		v1.POST("ping", handles.Ping)
@@ -34,12 +34,14 @@ func NewRouter(addr string) {
 			authed.GET("user/me", handles.GetMine())
 			// 登出
 			authed.DELETE("user/logout", handles.Logout())
-			// 执行交易数据签名接口
 
 		}
 		// 生成秘钥对
 		v1.GET("/new_key", handles.NewEthKey())
-
+		// 批量拉取地址,传入参数{startId: 99, limit: 50}
+		v1.POST("/batch_get_address", handles.BatchGetAddress())
+		// 交易签名接口 {address: ""0x123ssdd..., data: "0xkkkkkkkkkkkkkk..."}
+		v1.POST("/sign", handles.SignDataHandle())
 	}
 
 	if err := r.Run(addr); err != nil {

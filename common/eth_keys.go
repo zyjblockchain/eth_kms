@@ -1,4 +1,4 @@
-package crypto
+package common
 
 import (
 	"github.com/ethereum/go-ethereum/common"
@@ -7,11 +7,6 @@ import (
 
 // aes加解密的盐值
 const CIPHER = "~C·H!I@P#U$T%A^O&B*(T)U-P+.T/A:"
-
-type AccountKey struct {
-	Address common.Address `json:"address"`
-	Private string         `json:"private"`
-}
 
 // GenerateEthKey 生成以太坊密钥对
 func GenerateEthKey() (*AccountKey, error) {

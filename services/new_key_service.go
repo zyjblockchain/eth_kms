@@ -1,7 +1,7 @@
 package services
 
 import (
-	"eth_kms/common/crypto"
+	"eth_kms/common"
 	"eth_kms/models"
 )
 
@@ -12,14 +12,14 @@ type NewKeysInfo struct {
 // NewKeys 返回以太坊地址
 func (k *NewKeysInfo) NewKeys() (string, error) {
 	// 生成以太坊的密钥对
-	accountKey, err := crypto.GenerateEthKey()
+	accountKey, err := common.GenerateEthKey()
 	if err != nil {
 		return "", err
 	}
 	// 地址
 	strAddress := accountKey.Address.String()
 	// 为私钥进行aes对称加密
-	result, err := crypto.Encrypt(accountKey.Private)
+	result, err := common.Encrypt(accountKey.Private)
 	if err != nil {
 		return "", err
 	}
