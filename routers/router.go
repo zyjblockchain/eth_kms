@@ -15,7 +15,7 @@ func NewRouter(addr string) {
 	r.GET("/kms/new_key", handles.NewEthKeyHandle())
 	// 传入密钥对进行存储
 	r.POST("/kms/save", handles.SaveKeysHandle())
-	// 批量拉取地址,传入参数{startId: 99, limit: 50}
+	// 分页拉取地址,传入参数{startId: 99, limit: 50}
 	r.POST("/kms/batch_get_address", handles.BatchGetAddrHandle())
 	// 签名接口 {address: ""0x123ssdd..., data: "0xkkkkkkkkkkkkkk..."}
 	r.POST("/kms/sign", handles.SignDataHandle())

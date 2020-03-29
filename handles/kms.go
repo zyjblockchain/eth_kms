@@ -79,7 +79,7 @@ func SignDataHandle() gin.HandlerFunc {
 			if err != nil {
 				serializer.ErrorResponse(c, 40003, "签名失败", err.Error())
 			} else {
-				serializer.SuccessResponse(c, signResult{Result: sig}, "批量拉取地址成功")
+				serializer.SuccessResponse(c, signResult{Result: sig}, "签名数据成功")
 			}
 		} else {
 			serializer.ErrorResponse(c, 5001, "参数错误", err.Error())
