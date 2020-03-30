@@ -125,4 +125,32 @@
 ```
 ---
 
+---
+
+#### get private
+###### 请求url
+- `kms/get_private`
+###### 请求方式
+- POST
+###### 参数
+```
+{
+	"address": "0x659163470514CEfdce8991c2756Cf0130f84ee31"
+}
+```
+###### 参数说明
+1. `address`: 对应地址
+###### 返回示例
+```
+{
+    "status": 200,
+    "data": {
+        "address": "0x659163470514CEfdce8991c2756Cf0130f84ee31",
+        "private": "0x688db2b3bdb5fa6cfc75af28f354427c2ce211af509f1b8a7c71fe28d86e00ab"
+    },
+    "msg": "获取private成功",
+    "error": ""
+}
+```
+---
 

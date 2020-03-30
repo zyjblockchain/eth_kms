@@ -1,9 +1,9 @@
 package handles
 
 import (
+	"github.com/gin-gonic/gin"
 	"github.com/zyjblockchain/eth_kms/serializer"
 	"github.com/zyjblockchain/eth_kms/services"
-	"github.com/gin-gonic/gin"
 )
 
 type newKeyResult struct {
@@ -69,6 +69,7 @@ func BatchGetAddrHandle() gin.HandlerFunc {
 type signResult struct {
 	Result string `json:"result"`
 }
+
 // SignDataHandle
 func SignDataHandle() gin.HandlerFunc {
 	return func(c *gin.Context) {
@@ -90,16 +91,17 @@ type prvResult struct {
 	Address string `json:"address"`
 	Private string `json:"private"`
 }
+
 // GetPrivateHandle
 func GetPrivateHandle() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var service services.GetPrivate
 		if err := c.ShouldBind(&service); err == nil {
-			private,err := service.GetPriv()
+			private, err := service.GetPriv()
 			if err != nil {
 				serializer.ErrorResponse(c, 40004, "获取私钥失败", err.Error())
 			} else {
-				serializer.SuccessResponse(c, prvResult{Address: service.Address, Private:private}, "签名数据成功")
+				serializer.SuccessResponse(c, prvResult{Address: service.Address, Private: private}, "获取private成功")
 			}
 		} else {
 			serializer.ErrorResponse(c, 5001, "参数错误", err.Error())
