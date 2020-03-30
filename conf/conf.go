@@ -1,7 +1,7 @@
 package conf
 
 import (
-	"eth_kms/models"
+	"github.com/zyjblockchain/eth_kms/models"
 	"github.com/joho/godotenv"
 	"os"
 )

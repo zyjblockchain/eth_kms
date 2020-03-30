@@ -2,7 +2,7 @@ package common
 
 import (
 	"errors"
-	"eth_kms/models"
+	"github.com/zyjblockchain/eth_kms/models"
 	"fmt"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/crypto"

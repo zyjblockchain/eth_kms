@@ -1,7 +1,7 @@
 package services
 
 import (
-	common2 "eth_kms/common"
+	common2 "github.com/zyjblockchain/eth_kms/common"
 	"github.com/ethereum/go-ethereum/common"
 )
 

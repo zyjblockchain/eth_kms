@@ -1,6 +1,6 @@
 package services
 
-import "eth_kms/models"
+import "github.com/zyjblockchain/eth_kms/models"
 
 type BatchGetAddrInfo struct {
 	StartId uint `form:"startId" json:"startId"`

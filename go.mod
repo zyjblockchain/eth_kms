@@ -1,4 +1,4 @@
-module eth_kms
+module github.com/zyjblockchain/eth_kms
 
 go 1.12
 

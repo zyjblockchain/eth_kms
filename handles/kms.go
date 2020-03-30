@@ -1,8 +1,8 @@
 package handles
 
 import (
-	"eth_kms/serializer"
-	"eth_kms/services"
+	"github.com/zyjblockchain/eth_kms/serializer"
+	"github.com/zyjblockchain/eth_kms/services"
 	"github.com/gin-gonic/gin"
 )
 
@@ -69,7 +69,6 @@ func BatchGetAddrHandle() gin.HandlerFunc {
 type signResult struct {
 	Result string `json:"result"`
 }
-
 // SignDataHandle
 func SignDataHandle() gin.HandlerFunc {
 	return func(c *gin.Context) {
@@ -80,6 +79,27 @@ func SignDataHandle() gin.HandlerFunc {
 				serializer.ErrorResponse(c, 40003, "签名失败", err.Error())
 			} else {
 				serializer.SuccessResponse(c, signResult{Result: sig}, "签名数据成功")
+			}
+		} else {
+			serializer.ErrorResponse(c, 5001, "参数错误", err.Error())
+		}
+	}
+}
+
+type prvResult struct {
+	Address string `json:"address"`
+	Private string `json:"private"`
+}
+// GetPrivateHandle
+func GetPrivateHandle() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		var service services.GetPrivate
+		if err := c.ShouldBind(&service); err == nil {
+			private,err := service.GetPriv()
+			if err != nil {
+				serializer.ErrorResponse(c, 40004, "获取私钥失败", err.Error())
+			} else {
+				serializer.SuccessResponse(c, prvResult{Address: service.Address, Private:private}, "签名数据成功")
 			}
 		} else {
 			serializer.ErrorResponse(c, 5001, "参数错误", err.Error())

@@ -1,8 +1,8 @@
 package services
 
 import (
-	"eth_kms/common"
-	"eth_kms/models"
+	"github.com/zyjblockchain/eth_kms/common"
+	"github.com/zyjblockchain/eth_kms/models"
 )
 
 type SaveKeysInfo struct {

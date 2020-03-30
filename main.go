@@ -1,8 +1,9 @@
 package main
 
 import (
-	"eth_kms/conf"
-	"eth_kms/routers"
+	"github.com/zyjblockchain/eth_kms/conf"
+	"github.com/zyjblockchain/eth_kms/routers"
+
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 )
 

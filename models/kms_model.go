@@ -9,7 +9,7 @@ import (
 type KeysMgr struct {
 	gorm.Model
 	Address string
-	PriKey  string
+	PriKey  string // 加密之后的私钥
 }
 
 // AddRecord 添加记录
