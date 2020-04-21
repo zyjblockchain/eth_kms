@@ -40,4 +40,5 @@ func InitDB(dsn string) {
 // 自动建表
 func autoCreateTable() {
 	DB.AutoMigrate(&KeysMgr{})
+	DB.AutoMigrate(&Kv{})
 }
