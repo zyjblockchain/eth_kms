@@ -1,12 +1,17 @@
 package transaction
 
 import (
+	"context"
 	"crypto/ecdsa"
 	"fmt"
+	"github.com/ethereum/go-ethereum"
 	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/crypto"
+	"github.com/ethereum/go-ethereum/ethclient"
 	"math/big"
+	"strings"
 )
 
 // 以太坊token交易
@@ -28,7 +33,7 @@ func formatArgs(args string) []byte {
 }
 
 // NewERC20TokenTx 返回的是rawTransaction
-func NewERC20TokenTx(senderNonce uint64, receiver common.Address, contractAddr common.Address, gasLimit uint64, gasPrice *big.Int, tokenAmount uint64) *types.Transaction {
+func NewERC20TokenTx(senderNonce uint64, receiver common.Address, contractAddr common.Address, gasLimit uint64, gasPrice *big.Int, tokenAmount *big.Int) *types.Transaction {
 	/**
 	transferFun := "0xa9059cbb"
 	receiverAddrCode := 000000000000000000000000b1e15fdbe88b7e7c47552e2d33cd5a9b2e0fd478 // eg: 代币接收地址code
@@ -37,7 +42,7 @@ func NewERC20TokenTx(senderNonce uint64, receiver common.Address, contractAddr c
 	funcName := "transfer(address,uint256)"
 	funcCode := getContractFunctionCode(funcName)
 	receiverAddrCode := formatArgs(receiver.Hex())
-	AmountCode := formatArgs(fmt.Sprintf("%x", tokenAmount)) // todo 这里需要测试代理的单位换算，目前我不清楚ERC20所有代币是否都是18位小数位
+	AmountCode := formatArgs(tokenAmount.Text(16))
 
 	// 组合生成执行合约的input
 	inputData := make([]byte, 0)
@@ -52,4 +57,61 @@ func SignRawTx(rawTx *types.Transaction, chainID *big.Int, prv *ecdsa.PrivateKey
 	signer := types.NewEIP155Signer(chainID)
 	signedTx, err := types.SignTx(rawTx, signer, prv)
 	return signedTx, err
+}
+
+// GetTokenBalance
+func GetTokenBalance(address, contractAddress common.Address, client *ethclient.Client) (*big.Int, error) {
+	funcName := "balanceOf(address)"
+	funcCode := getContractFunctionCode(funcName)
+
+	// 组合生成执行合约的input
+	inputData := make([]byte, 0)
+	inputData = append(funcCode, formatArgs(address.Hex())...)
+
+	callMsg := ethereum.CallMsg{
+		From: address,          // 钱包地址
+		To:   &contractAddress, // 代币合约地址
+		Data: inputData,
+	}
+	result, err := client.CallContract(context.Background(), callMsg, nil)
+	if err != nil {
+		return nil, err
+	}
+	res := formatHex(hexutil.Encode(result))
+	// res == "0x"
+	if len(res) == 2 {
+		return big.NewInt(0), nil
+	} else {
+		return hexutil.DecodeBig(res)
+	}
+}
+
+// formatHex 去除前置的0
+func formatHex(s string) string {
+	if strings.HasPrefix(s, "0x") || strings.HasPrefix(s, "0X") {
+		s = s[2:]
+	}
+	// 去除前置的所有0
+	ss := strings.TrimLeft(s, "0")
+	fmt.Println("ss: ", ss)
+	return "0x" + ss
+}
+
+// EstimateTokenTxGas 预估代币转账交易gas used使用量
+func EstimateTokenTxGas(client *ethclient.Client, tokenAmount *big.Int, from, contractAddress, receiver common.Address) (uint64, error) {
+	funcName := "transfer(address,uint256)"
+	funcCode := getContractFunctionCode(funcName)
+	receiverAddrCode := formatArgs(receiver.Hex())
+	AmountCode := formatArgs(tokenAmount.Text(16))
+	// 组合生成执行合约的input
+	inputData := make([]byte, 0)
+	inputData = append(append(funcCode, receiverAddrCode...), AmountCode...)
+
+	callMsg := ethereum.CallMsg{
+		From:     from,
+		To:       &contractAddress,
+		GasPrice: nil,
+		Data:     inputData,
+	}
+	return client.EstimateGas(context.Background(), callMsg)
 }

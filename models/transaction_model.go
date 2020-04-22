@@ -2,19 +2,21 @@ package models
 
 import (
 	"github.com/jinzhu/gorm"
-	"github.com/jinzhu/gorm/dialects/mssql"
 )
 
 // 交易记录表
 type Transaction struct {
 	gorm.Model
-	TxHash    string `gorm:"not null;unique"`
-	State     int    `gorm:"index:t_idx"` // 交易状态
-	TxType    int    `gorm:"index:t_idx"` // 交易类型
-	TxContent mssql.JSON
+	TxHash string
+	State  int // 交易状态，0：未发送，1：pending，2：发送失败，3：发送成功，4：交易超时
+	TxType int // 交易类型，0：以太坊转账交易，1：以太坊上的usdt转账交易
+	From   string
+	To     string
+	Amount string
+	ErrMsg string // 如果交易发送失败，失败的msg
 }
 
-// add
+// Add
 func (t *Transaction) Add() error {
 	return DB.Create(t).Error
 }
@@ -24,4 +26,9 @@ func (t *Transaction) Get() (*Transaction, error) {
 	var tt *Transaction
 	err := DB.Where(t).First(tt).Error
 	return tt, err
+}
+
+// Update
+func (t *Transaction) Update(tt Transaction) error {
+	return DB.Model(t).Updates(tt).Error
 }

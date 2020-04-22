@@ -2,35 +2,36 @@ package models
 
 import (
 	"errors"
+	"fmt"
 	"github.com/jinzhu/gorm"
-	"math/big"
 )
 
 // 需要归集的地址表
-type NeedCollectionAddress struct {
+type CollectionAddress struct {
 	gorm.Model
-	Address     string  `gorm:"not null;unique"`
-	State       int     `gorm:"index:n_idx"` // 0:未开始，1:进行中，2:已完成，3:失败
-	EthBalance  big.Int `gorm:"index:n_idx"` // eth余额，单位为wei
-	UsdtBalance big.Int `gorm:"index:n_idx"` // usdt余额，小数位6位的最小单位余额
+	Address      string
+	State        int    // 0:未开始，1:进行中，2:已完成，3:失败
+	EthBalance   string // eth余额，单位为wei
+	TokenBalance string // token余额，小数位6位的最小单位余额
+	TokenAddress string // token所在的智能合约地址
 }
 
 //  Save 保存记录
-func (n *NeedCollectionAddress) Save() error {
+func (n *CollectionAddress) Save() error {
 	return DB.Create(n).Error
 }
 
 // UpdateInfo 更新
-func UpdateInfo(nca NeedCollectionAddress) error {
-	return DB.Model(&NeedCollectionAddress{}).Where("address = ?", nca.Address).Updates(nca).Error
+func UpdateInfo(nca CollectionAddress) error {
+	return DB.Model(&CollectionAddress{}).Where("address = ?", nca.Address).Updates(nca).Error
 }
 
 // 批量拉取 GetBatchAddrById
-func GetBatchAddrById(startId, limit uint) ([]*NeedCollectionAddress, uint, error) {
-	var records []*NeedCollectionAddress
+func GetBatchAddrById(startId, limit uint) ([]*CollectionAddress, uint, error) {
+	var records []*CollectionAddress
 	var total uint
 	// 查询表中的记录总数
-	err := DB.Model(&NeedCollectionAddress{}).Count(&total).Error
+	err := DB.Model(&CollectionAddress{}).Count(&total).Error
 	if err != nil {
 		return nil, 0, err
 	}
@@ -40,4 +41,20 @@ func GetBatchAddrById(startId, limit uint) ([]*NeedCollectionAddress, uint, erro
 	}
 	err = DB.Limit(limit).Offset(startId).Find(&records).Error
 	return records, total, err
+}
+
+//  InsertBatch 批量插入数据
+func InsertBatch(records []*CollectionAddress) error {
+	sql := "INSERT INTO `collection_addresses` (`address`,`state`,`token_balance`, `token_address`) VALUES "
+	// 循环data数组,组合sql语句
+	for key, value := range records {
+		if len(records)-1 == key {
+			// 最后一条数据 以分号结尾
+			sql += fmt.Sprintf("('%s','%d','%s','%s');", value.Address, value.State, value.TokenBalance, value.TokenAddress)
+		} else {
+			sql += fmt.Sprintf("('%s','%d','%s','%s'),", value.Address, value.State, value.TokenBalance, value.TokenAddress)
+		}
+	}
+	err := DB.Exec(sql).Error
+	return err
 }
