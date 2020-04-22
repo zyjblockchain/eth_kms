@@ -3,7 +3,6 @@ package transaction
 import (
 	"context"
 	"crypto/ecdsa"
-	"fmt"
 	"github.com/ethereum/go-ethereum"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
@@ -93,7 +92,6 @@ func formatHex(s string) string {
 	}
 	// 去除前置的所有0
 	ss := strings.TrimLeft(s, "0")
-	fmt.Println("ss: ", ss)
 	return "0x" + ss
 }
 

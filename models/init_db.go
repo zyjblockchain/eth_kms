@@ -1,9 +1,9 @@
 package models
 
 import (
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
+	"github.com/zyjblockchain/sandy_log/log"
 )
 
 var DB *gorm.DB
@@ -20,7 +20,7 @@ func InitDB(dsn string) {
 	// // MYSQL dsn格式： {username}:{password}@tcp({host}:{port})/{Dbname}?charset=utf8&parseTime=True&loc=Local
 	// // 类似{username}使用花括号包着的名字都是需要替换的参数
 	// dsn = fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8&parseTime=True&loc=Local", username, password, host, port, Dbname)
-	fmt.Println("dsn: ", dsn)
+	log.Info("dsn: ", dsn)
 	db, err := gorm.Open("mysql", dsn)
 	if err != nil {
 		panic(err)

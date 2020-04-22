@@ -3,9 +3,15 @@ package main
 import (
 	"github.com/zyjblockchain/eth_kms/conf"
 	"github.com/zyjblockchain/eth_kms/routers"
+	"github.com/zyjblockchain/sandy_log/log"
 
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 )
+
+func init() {
+	// 初始化日志级别、格式、是否保存到文件
+	log.Setup(log.LevelDebug, true, true)
+}
 
 func main() {
 	// 初始化数据库

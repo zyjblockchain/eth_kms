@@ -2,9 +2,9 @@ package transaction
 
 import (
 	"context"
-	"fmt"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/crypto"
+	"github.com/zyjblockchain/sandy_log/log"
 	"math/big"
 	"testing"
 )
@@ -26,7 +26,7 @@ func TestSendTx(t *testing.T) {
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println("nonce: ", nonce)
+	log.Infof("nonce: %d", nonce)
 	gasLimit := uint64(60000)
 	gasPrice := big.NewInt(5000000000)
 	tokenAmount, _ := new(big.Int).SetString("1000000000000000000", 10)
@@ -44,7 +44,7 @@ func TestSendTx(t *testing.T) {
 	}
 	// 把签名好的交易发送到测试网络中
 	err = client.SendTransaction(context.Background(), signedTx)
-	fmt.Printf("txHash: %s\n err: %v", signedTx.Hash().Hex(), err)
+	log.Infof("txHash: %s\n err: %v", signedTx.Hash().Hex(), err)
 }
 
 func TestGetTokenBalance(t *testing.T) {
