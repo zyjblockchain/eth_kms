@@ -10,10 +10,18 @@ import (
 type CollectionAddress struct {
 	gorm.Model
 	Address      string
-	State        int    // 0:未开始，1:进行中，2:已完成，3:失败
+	State        int    // 0:待处理，1:可以进行归集操作，2:进行中，3:已完成，4:失败
 	EthBalance   string // eth余额，单位为wei
 	TokenBalance string // token余额，小数位6位的最小单位余额
 	TokenAddress string // token所在的智能合约地址
+	GasPrice     string // 发送交易的gas price
+	GasLimit     uint64 // gasLimit
+}
+
+func (n *CollectionAddress) Println() string {
+	return fmt.Sprint("address: %s, state: %d, ethBalance: %s, "+
+		"tokenBalance: %s, tokenAddress: %s",
+		n.Address, n.State, n.EthBalance, n.TokenBalance, n.TokenAddress)
 }
 
 //  Save 保存记录

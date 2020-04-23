@@ -13,6 +13,7 @@ type Transaction struct {
 	From   string
 	To     string
 	Amount string
+	TxInfo string // 交易详细信息
 	ErrMsg string // 如果交易发送失败，失败的msg
 }
 

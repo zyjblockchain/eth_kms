@@ -16,22 +16,35 @@ func init() {
 
 const contractAddress = "0x03332638A6b4F5442E85d6e6aDF929Cd678914f1" // lemo测试币的合约地址
 
+// 获取需要归集的地址
 func TestBatchGetCanCollectAddress(t *testing.T) {
 	client := transaction.NewEthClient(transaction.RINKEBYNET)
 	if client == nil {
 		panic("new wth client err")
 	}
 	defer client.Close()
-	err := BatchGetCanCollectAddress(common.HexToAddress(contractAddress), 0, 10, client)
+	err := BatchGetCanCollectAddress(common.HexToAddress(contractAddress), 30, 10, client)
 	t.Log(err)
 }
 
+// 为需要归集的地址中转入少量的eth
 func TestSendGasFeeForColAddr(t *testing.T) {
 	client := transaction.NewEthClient(transaction.RINKEBYNET)
 	if client == nil {
 		panic("new wth client err")
 	}
 	defer client.Close()
-	err := SendGasFeeForColAddr(0, 10, client)
+	err := SendGasFeeForColAddrProcess(0, 10, client)
+	t.Log(err)
+}
+
+// 归集
+func TestCollectionTokenProcess(t *testing.T) {
+	client := transaction.NewEthClient(transaction.RINKEBYNET)
+	if client == nil {
+		panic("new wth client err")
+	}
+	defer client.Close()
+	err := CollectionTokenProcess(0, 10, client)
 	t.Log(err)
 }

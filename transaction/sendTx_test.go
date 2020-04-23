@@ -14,7 +14,7 @@ func TestSendTx(t *testing.T) {
 	const contractAddress = "0x03332638A6b4F5442E85d6e6aDF929Cd678914f1"           // lemo测试币的合约地址
 	fromPriv := "69F657EAF364969CCFB2531F45D9C9EFAC0A63E359CEA51E5F7D8340784168D2" // 发送者私钥
 	fromAddr := "0x59375A522876aB96B0ed2953D0D3b92674701Cc2"                       // 发送者地址
-	toAddr := "0x7AC954Ed6c2d96d48BBad405aa1579C828409f59"                         // 接收者地址
+	toAddr := "0xd680FE92D41c0DBf059668bd4a9d1F137A4103F9"                         // 接收者地址
 
 	client := NewEthClient(RINKEBYNET)
 	if client == nil {

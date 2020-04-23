@@ -46,6 +46,24 @@ func SendEthTx(private string, nonce, gasLimit uint64, gasPrice *big.Int, to com
 	return signedTx, err
 }
 
+// SendTokenTx 发送token交易
+func SendTokenTx(private string, nonce, gasLimit uint64, gasPrice *big.Int, tokenReceiver, contractAddr common.Address, tokenAmount *big.Int, client *ethclient.Client) (*types.Transaction, error) {
+	rawTx := NewERC20TokenTx(nonce, tokenReceiver, contractAddr, gasLimit, gasPrice, tokenAmount)
+	// 对原生交易进行签名
+	prv, err := crypto.ToECDSA(common.FromHex(private))
+	if err != nil {
+		panic(err)
+	}
+	// TODO  RINKEBYNET 的chainID为4,主网的chainID为1
+	signedTx, err := SignRawTx(rawTx, big.NewInt(4), prv)
+	if err != nil {
+		panic(err)
+	}
+	// 把签好名的交易发送到网络
+	err = client.SendTransaction(context.Background(), signedTx)
+	return signedTx, err
+}
+
 // // SendTx
 // func SendTx(signedTx *types.Transaction, rawurl string) (common.Hash, error) {
 // 	// 连接网络
