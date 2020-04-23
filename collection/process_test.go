@@ -25,3 +25,13 @@ func TestBatchGetCanCollectAddress(t *testing.T) {
 	err := BatchGetCanCollectAddress(common.HexToAddress(contractAddress), 0, 10, client)
 	t.Log(err)
 }
+
+func TestSendGasFeeForColAddr(t *testing.T) {
+	client := transaction.NewEthClient(transaction.RINKEBYNET)
+	if client == nil {
+		panic("new wth client err")
+	}
+	defer client.Close()
+	err := SendGasFeeForColAddr(0, 10, client)
+	t.Log(err)
+}
