@@ -45,6 +45,6 @@ func TestCollectionTokenProcess(t *testing.T) {
 		panic("new wth client err")
 	}
 	defer client.Close()
-	err := CollectionTokenProcess(0, 10, client)
+	err := ColleTokenProcess(0, 10, client)
 	t.Log(err)
 }

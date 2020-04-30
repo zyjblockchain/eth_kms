@@ -226,7 +226,7 @@ func SendGasFeeForColAddrProcess(startId, limit uint, client *ethclient.Client) 
 }
 
 // 4. 归集到接收地址
-func CollectionTokenProcess(startId, limit uint, client *ethclient.Client) error {
+func ColleTokenProcess(startId, limit uint, client *ethclient.Client) error {
 	// 获取接收归集token的地址
 	colAddr, err := models.Get(models.CollectionAddrKey)
 	if err != nil {
