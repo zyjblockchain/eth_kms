@@ -311,7 +311,7 @@ func ColleTokenProcess(startId, limit uint, client *ethclient.Client) error {
 			}
 
 			// 监听交易是否成功
-			// 开启一个协成来监听交易是否发送成功
+			// 开启一个协程来监听交易是否发送成功
 			wg.Add(1)
 			go func() {
 				defer wg.Done()
