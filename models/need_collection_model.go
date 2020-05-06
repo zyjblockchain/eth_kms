@@ -19,7 +19,7 @@ type CollectionAddress struct {
 }
 
 func (n *CollectionAddress) Println() string {
-	return fmt.Sprint("address: %s, state: %d, ethBalance: %s, "+
+	return fmt.Sprintf("address: %s, state: %d, ethBalance: %s, "+
 		"tokenBalance: %s, tokenAddress: %s",
 		n.Address, n.State, n.EthBalance, n.TokenBalance, n.TokenAddress)
 }

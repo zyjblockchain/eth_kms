@@ -9,14 +9,16 @@ import (
 	"testing"
 )
 
+var chainNet = "https://rinkeby.infura.io/v3/36b98a13557c4b8583d57934ede2f74d"
+
 // TestSendTx 这里使用lemo测试代币进行测试
 func TestSendTx(t *testing.T) {
-	const contractAddress = "0x03332638A6b4F5442E85d6e6aDF929Cd678914f1"           // lemo测试币的合约地址
+	const contractAddress = "0xd0cf44eebcfc88e648ae7a3dacea51db7cb8ff7d"           // 测试币的合约地址
 	fromPriv := "69F657EAF364969CCFB2531F45D9C9EFAC0A63E359CEA51E5F7D8340784168D2" // 发送者私钥
 	fromAddr := "0x59375A522876aB96B0ed2953D0D3b92674701Cc2"                       // 发送者地址
-	toAddr := "0xd680FE92D41c0DBf059668bd4a9d1F137A4103F9"                         // 接收者地址
+	toAddr := "0xDf24148EAf2374d2761d4F0c260FE1dBeB0153c0"                         // 接收者地址
 
-	client := NewEthClient(RINKEBYNET)
+	client := NewEthClient(chainNet)
 	if client == nil {
 		panic("new wth client err")
 	}
@@ -29,7 +31,7 @@ func TestSendTx(t *testing.T) {
 	log.Infof("nonce: %d", nonce)
 	gasLimit := uint64(60000)
 	gasPrice := big.NewInt(5000000000)
-	tokenAmount, _ := new(big.Int).SetString("1000000000000000000", 10)
+	tokenAmount, _ := new(big.Int).SetString("1550000000000000000", 10)
 	// 生成原生交易
 	rawTx := NewERC20TokenTx(nonce, common.HexToAddress(toAddr), common.HexToAddress(contractAddress), gasLimit, gasPrice, tokenAmount)
 	// 对原生交易进行签名
@@ -48,7 +50,7 @@ func TestSendTx(t *testing.T) {
 }
 
 func TestGetTokenBalance(t *testing.T) {
-	client := NewEthClient(RINKEBYNET)
+	client := NewEthClient(chainNet)
 	if client == nil {
 		panic("new wth client err")
 	}
@@ -61,7 +63,7 @@ func TestGetTokenBalance(t *testing.T) {
 }
 
 func TestGetEthBalance(t *testing.T) {
-	client := NewEthClient(RINKEBYNET)
+	client := NewEthClient(chainNet)
 	if client == nil {
 		panic("new wth client err")
 	}
@@ -73,7 +75,7 @@ func TestGetEthBalance(t *testing.T) {
 }
 
 func TestSendEthTx(t *testing.T) {
-	client := NewEthClient(RINKEBYNET)
+	client := NewEthClient(chainNet)
 	if client == nil {
 		panic("new wth client err")
 	}
@@ -94,7 +96,7 @@ func TestSendEthTx(t *testing.T) {
 }
 
 func TestEstimateTokenTxGas(t *testing.T) {
-	client := NewEthClient(RINKEBYNET)
+	client := NewEthClient(chainNet)
 	if client == nil {
 		panic("new wth client err")
 	}

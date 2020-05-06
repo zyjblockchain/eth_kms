@@ -1,11 +1,10 @@
 package main
 
 import (
+	_ "github.com/jinzhu/gorm/dialects/mysql"
 	"github.com/zyjblockchain/eth_kms/conf"
 	"github.com/zyjblockchain/eth_kms/routers"
 	"github.com/zyjblockchain/sandy_log/log"
-
-	_ "github.com/jinzhu/gorm/dialects/mysql"
 )
 
 func init() {

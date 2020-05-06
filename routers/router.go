@@ -30,7 +30,8 @@ func NewRouter(addr string) {
 	r.POST("/kms/save_gas_from_address", handles.SaveGasFromAddrHandle())
 	// get gas from address
 	r.GET("/kms/get_gas_from_address", handles.GetGasFromAddrHandle())
-
+	// usdt资产归集
+	r.GET("/kms/usdt_collection_process", handles.ProcessCollectUSDTHandle())
 	if err := r.Run(addr); err != nil {
 		panic(err)
 	}

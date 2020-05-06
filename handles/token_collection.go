@@ -71,3 +71,16 @@ func GetGasFromAddrHandle() gin.HandlerFunc {
 		}
 	}
 }
+
+// ProcessCollectUSDTHandle
+func ProcessCollectUSDTHandle() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		svr := &services.ProcessCollection{}
+		if err := svr.ProcessCollectUSDT(); err != nil {
+			serializer.ErrorResponse(c, 40011, "归集失败", err.Error())
+		} else {
+			serializer.SuccessResponse(c, nil, "success")
+		}
+
+	}
+}

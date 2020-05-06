@@ -7,8 +7,11 @@ import (
 )
 
 const (
-	GasFromAddrKey    = "gasFromAddr"    // 转出eth作为归集账户的交易gas的地址tag
-	CollectionAddrKey = "CollectionAddr" // 接收归集的所有USDT地址tag
+	GasFromAddrKey       = "gasFromAddr"          // 转出eth作为归集账户的交易gas的地址tag
+	CollectionAddrKey    = "CollectionAddr"       // 接收归集的所有USDT地址tag
+	CollectionAddrOffset = "CollectionAddrOffset" // 记录上次归集地址的偏移位置
+	SendGasFeeOffset     = "SendGasFeeOffset"     // 记录为归集地址转gas费用的偏移位置
+
 )
 
 type Kv struct {
@@ -23,7 +26,7 @@ func newKey(tag string) string {
 }
 
 // Set 创建或者更新
-func Set(tag, addr string) error {
+func Set(tag, val string) error {
 	// 查询是否存在，存在则更新，不存在则创建
 	var count uint
 	err := DB.Model(&Kv{}).Where("k = ?", newKey(tag)).Count(&count).Error
@@ -34,12 +37,12 @@ func Set(tag, addr string) error {
 		// 创建
 		kv := Kv{
 			K: newKey(tag),
-			V: addr,
+			V: val,
 		}
 		return DB.Create(&kv).Error
 	} else if count == 1 {
 		// 更新
-		return DB.Model(&Kv{}).Where("k = ?", tag).Update(newKey(tag), addr).Error
+		return DB.Model(&Kv{}).Where("k = ?", tag).Update(newKey(tag), val).Error
 	} else {
 		return errors.New(fmt.Sprintf("数据库中存在两个以上的tag: count = %d, tag = %s", count, tag))
 	}

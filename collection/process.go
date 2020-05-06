@@ -22,11 +22,11 @@ type AddrTokenInfo struct {
 }
 
 // 1. BatchGetCanCollectAddress批量获取需要归集的地址
-func BatchGetCanCollectAddress(contractAddress common.Address, startId, limit uint, client *ethclient.Client) error {
+func BatchGetCanCollectAddress(contractAddress common.Address, startId, limit uint, client *ethclient.Client) (int, int, error) {
 	// 批量拉取表中的数据
 	keysMgrs, total, err := models.GetBatchById(startId, limit)
 	if err != nil {
-		return err
+		return 0, 0, err
 	}
 	log.Debugf("kms中的total: %d", total)
 	// 遍历KeysMgrs获取有余额的地址
@@ -54,7 +54,8 @@ func BatchGetCanCollectAddress(contractAddress common.Address, startId, limit ui
 		tokenAddres = append(tokenAddres, tokenAddr)
 	}
 	// 持久化到数据库
-	return saveByBatch(tokenAddres)
+	err = saveByBatch(tokenAddres)
+	return len(keysMgrs), len(tokenAddres), err
 }
 
 // 2. 批量保存需要归集的地址信息到数据库
@@ -106,6 +107,8 @@ func SendGasFeeForColAddrProcess(startId, limit uint, client *ethclient.Client) 
 		return err
 	}
 	gasFromAddrPriv := accKey.Private
+	balance, _ := client.BalanceAt(context.Background(), common.HexToAddress(gasFromAddr), nil)
+	log.Warnf("gasFromAddr balance: %s", balance.String())
 
 	gasFromAddrNonce, err := client.NonceAt(context.Background(), common.HexToAddress(gasFromAddr), nil)
 	if err != nil {

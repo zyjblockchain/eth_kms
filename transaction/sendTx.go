@@ -7,11 +7,10 @@ import (
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/ethereum/go-ethereum/rpc"
+	"github.com/labstack/gommon/log"
 	"math/big"
+	"os"
 )
-
-const MAINNET = "https://mainnet.infura.io/KoLQDsHeWLs20urjat1X"
-const RINKEBYNET = "https://rinkeby.infura.io/v3/36b98a13557c4b8583d57934ede2f74d"
 
 func NewEthClient(rawurl string) *ethclient.Client {
 	// 连接网络
@@ -36,8 +35,13 @@ func SendEthTx(private string, nonce, gasLimit uint64, gasPrice *big.Int, to com
 	if err != nil {
 		panic(err)
 	}
-	// TODO  RINKEBYNET 的chainID为4,主网的chainID为1
-	signedTx, err := SignRawTx(rawTx, big.NewInt(4), prv)
+	// RINKEBYNET 的chainID为4,主网的chainID为1
+	chainId, b := new(big.Int).SetString(os.Getenv("ETH_CHAIN_ID"), 10)
+	if !b {
+		panic("获取chainId失败")
+	}
+	log.Infof("chainId: %d", chainId)
+	signedTx, err := SignRawTx(rawTx, chainId, prv)
 	if err != nil {
 		panic(err)
 	}
@@ -54,8 +58,12 @@ func SendTokenTx(private string, nonce, gasLimit uint64, gasPrice *big.Int, toke
 	if err != nil {
 		panic(err)
 	}
-	// TODO  RINKEBYNET 的chainID为4,主网的chainID为1
-	signedTx, err := SignRawTx(rawTx, big.NewInt(4), prv)
+	// RINKEBYNET 的chainID为4,主网的chainID为1
+	chainId, b := new(big.Int).SetString(os.Getenv("ETH_CHAIN_ID"), 10)
+	if !b {
+		panic("获取chainId失败")
+	}
+	signedTx, err := SignRawTx(rawTx, chainId, prv)
 	if err != nil {
 		panic(err)
 	}
@@ -63,18 +71,3 @@ func SendTokenTx(private string, nonce, gasLimit uint64, gasPrice *big.Int, toke
 	err = client.SendTransaction(context.Background(), signedTx)
 	return signedTx, err
 }
-
-// // SendTx
-// func SendTx(signedTx *types.Transaction, rawurl string) (common.Hash, error) {
-// 	// 连接网络
-// 	rpcDial, err := rpc.Dial(rawurl)
-// 	if err != nil {
-// 		return common.Hash{}, err
-// 	}
-// 	client := ethclient.NewClient(rpcDial)
-//
-// 	// 发送交易
-// 	err = client.SendTransaction(context.Background(),signedTx)
-// 	// 返回交易hash
-// 	return signedTx.Hash(), err
-// }
